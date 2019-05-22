@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.uxcam.UXCam
 import kotlinx.android.synthetic.main.activity_login.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
@@ -20,6 +21,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        UXCam.startWithKey("em4z8osou79jvb4");
 
         emailEditText.setText("a@b.pl")
         passwordEditText.setText("testtest1")

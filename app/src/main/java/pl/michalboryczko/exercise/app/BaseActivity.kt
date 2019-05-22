@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.flurry.android.FlurryAgent
 import com.google.android.material.snackbar.Snackbar
+import com.mixpanel.android.mpmetrics.MixpanelAPI
+import com.uxcam.UXCam
 import dagger.android.support.DaggerAppCompatActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,6 +25,8 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
 
     lateinit var viewModel : T
 
+    lateinit var mixpanel: MixpanelAPI
+
     inline fun <reified T: BaseViewModel> getGenericViewModel(): T {
         return ViewModelProviders.of(this, viewModelFactory).get(T::class.java)
     }
@@ -30,7 +35,15 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         initViewModel()
         lifecycle.addObserver(viewModel)
+
+        UXCam.startWithKey("em4z8osou79jvb4");
+        mixpanel = MixpanelAPI.getInstance(this, "92ae5834dd72dbea8a203026af8a3559")
         observeToastMessage()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mixpanel.flush()
     }
 
     abstract fun initViewModel()
@@ -38,6 +51,8 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
     fun observeUserLoginStatus(){
         viewModel.loggedInStatus.observe(this, Observer {
             it?.let { isLoggedIn ->
+                FlurryAgent.logEvent("BaseActivity - isLoggedIn: $isLoggedIn")
+                mixpanel.track("BaseActivity - isLoggedIn: $isLoggedIn")
                 if(!isLoggedIn){
                     navigator.navigateToLoginActivity(this)
                 }

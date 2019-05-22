@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.flurry.android.FlurryAgent
 import kotlinx.android.synthetic.main.activity_active_session.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
@@ -29,6 +30,7 @@ class ActiveSessionActivity : BaseActivity<ActiveSessionViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_active_session)
+        FlurryAgent.logEvent("ActiveSessionActivity - launched")
 
         if(intent.hasExtra(Constants.SESSION_BUNDLE)){
             val session = intent.getSerializableExtra(Constants.SESSION_BUNDLE) as Session
@@ -40,6 +42,8 @@ class ActiveSessionActivity : BaseActivity<ActiveSessionViewModel>() {
         }
 
         saveEstimationButton.setOnClickListener {
+
+            FlurryAgent.logEvent("ActiveSessionActivity - save estimation clicked")
             viewModel.saveEstimationClicked(pointsEstimation.text.toString().toInt())
         }
 

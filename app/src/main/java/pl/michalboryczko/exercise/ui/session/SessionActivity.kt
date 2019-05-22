@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.flurry.android.FlurryAgent
 import kotlinx.android.synthetic.main.activity_session.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
@@ -18,6 +19,9 @@ class SessionActivity : BaseActivity<SessionViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_session)
+
+        FlurryAgent.logEvent("SessionActivity - launched")
+        mixpanel.track("SessionActivity - launched")
 
         createSessionButton.setOnClickListener {
             viewModel.createSession(sessionNameEditText.text.toString(), sessionPassword.text.toString())
